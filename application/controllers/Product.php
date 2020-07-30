@@ -21,8 +21,8 @@ class Product extends CI_Controller
         $data['sub_title'] = 'List Barang';
         $data['content'] = 'product/product_list';
         $this->load->view('template',$data);
-    } 
-    
+    }
+
     public function json() {
         header('Content-Type: application/json');
         echo $this->Product_model->json();

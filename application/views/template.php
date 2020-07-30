@@ -194,6 +194,7 @@
             </ul>
           </li>
           <li><a href="<?= base_url('tampil_penjualan') ?>"><i class="fa fa-book"></i> <span>Tampil Penjualan</span></a></li>
+          <li><a href="<?= base_url('credit') ?>"><i class="fa fa-list-alt"></i> <span>Tampil Hutang</span></a></li>
         <?php if(getuser()->level=='admin') : ?>
           <li><a href="<?= base_url('grafik') ?>"><i class="fa fa-bar-chart"></i> <span>Grafik Penjualan</span></a></li>
           <li class="treeview">

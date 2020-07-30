@@ -9,7 +9,7 @@ class Product_model extends CI_Model
     public $table = 'product';
     public $id = 'id_product';
     public $order = 'DESC';
-
+ 
     function __construct()
     {
         parent::__construct();
@@ -101,7 +101,7 @@ class Product_model extends CI_Model
     function insert($data)
     {
         $this->db->insert($this->table, $data);
-    }
+    } 
 
     // update data
     function update($id, $data)

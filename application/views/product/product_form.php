@@ -14,7 +14,7 @@
                 <div class="row">
                 <div class="col-md-4"></div>
                     <div class="col-md-4">
-                        <form action="<?php echo $action; ?>" method="post">
+                        <form id="form_add_product" action="<?php echo $action; ?>" method="post">
                             <div class="form-group">
                                 <label for="varchar">Kode Barang <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Wajib di isi">*</span><?php echo form_error('kode_product') ?></label>
                                 <div class="row">
@@ -36,7 +36,7 @@
                                 <label for="int">Kategori <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Wajib di isi">*</span><?php echo form_error('category_id') ?></label>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <select required name="category_id" class="form-control select2" id="category_id">
+                                        <select required name="category_id" class="form-control select2category" id="category_id">
                                             <option value="">[ PILIH ]</option>
                                             <?php foreach ($kategori->result() as $k) : ?>
                                             <option value="<?= $k->id ?>" <?= set_value('category_id')==$k->id?'selected':'' ?>><?= $k->name ?></option>
@@ -125,4 +125,32 @@
             </div>
         </div>
     </div>
+</div>
+
+
+<div class="modal fade" style="z-index:9999999999999" id="md-add-category">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Tambah Data Kategori</h4>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url('category/create_action') ?>" id="quick_add_category" method="post">
+                    <div class="form-group">
+                        <label for="varchar">Kategori Produk <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="kategori" required value="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="varchar">Deskripsi</label>
+                        <input type="text" class="form-control" name="deskripsi" id="deskripsi" placeholder="Deskripsi" value="" />
+                    </div>
+                    <button type="submit" class="btn <?= btncolor(getsetting()->theme) ?>"><i class="fa fa-send-o"></i> Simpan</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>

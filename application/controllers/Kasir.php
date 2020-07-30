@@ -25,6 +25,7 @@ class Kasir extends CI_Controller
         $data['lebar'] = true;
         $data['customers'] = $this->customer_model->get_all();
         $data['kategori'] = $this->db->get('category');
+        $data['newid_cust'] = getAutoNumber('customer','id_customer','P',4);
         $data['item'] = $this->db->get('product');
         $data['codejs'] = 'kasir/codejs';
         $this->load->view('template', $data);
@@ -457,60 +458,145 @@ class Kasir extends CI_Controller
 
     public function proses_penjualan()
     {
+        $input = $this->input->post();
+        // var_dump($input);die();
         // PROSES SIMPAN
         $print = $this->input->post('print_save');
         $save = $this->input->post('just_save');
 
+        // $credit = $this->input->post('credit');
+
+        // if($credit==true){
+        //     echo "credit";
+        // }else{
+        //     echo "Lunas";
+        // }
+
+        // die();
+
         if ($this->cart->contents() != null) {
-            $totalharga = $this->input->post('totalharga');
-            $uangbayar = $this->input->post('uangbayar');
-            $uangkembali = $this->input->post('uangkembali');
-            $invoice = $this->input->post('invoice');
-            $customer = $this->input->post('customer');
 
-            $data = array(
-                'invoice' => $invoice,
-                'total_sales' => str_replace('.', '', $totalharga),
-                'pay_money' => str_replace('.', '', $uangbayar),
-                'refund' => str_replace('.', '', $uangkembali),
-                'total_qty' => '5',
-                'id_customer' => $customer,
-                'id_user' => getuser()->id,
-            );
-            $this->db->insert('sales', $data);
+            if($this->input->post('credit') == true)
+            {
+                $totalharga = $this->input->post('totalharga');
+                $uangmuka = $this->input->post('uangmuka');
+                $sisatagihan = $this->input->post('sisa_tagihan');
+                $invoice = $this->input->post('invoice');
+                $customer = $this->input->post('customer_credit');
 
-            foreach ($this->cart->contents() as $items) {
-                if ($items['type'] == 1) {
+                $data = array(
+                    'invoice' => $invoice,
+                    'total_sales' => str_replace('.', '', $totalharga),
+                    'pay_money' => str_replace('.', '', $uangmuka),
+                    'refund' => 0,
+                    'total_qty' => '5',
+                    'id_customer' => $customer,
+                    'id_user' => getuser()->id,
+                    'paid' => '0',
+                    'type' => 'credit'
+                );
+
+                $this->db->insert('sales', $data);
+
+                if(str_replace('.', '', $uangmuka)>0){
                     $data = array(
                         'invoice' => $invoice,
-                        'kode_product' => $items['id'],
-                        'name_product' => $items['name'],
-                        'price' => $items['hargapokok'],
-                        'price_sale' => $items['harga_jual'],
-                        'qty' => $items['qty'],
-                        'discount' => $items['disc'],
-                        'sub_total' => $items['subtotal'],
-                    );
-
-                    $this->db->insert('sale_detail', $data);
-
-                    $this->db->set('stock', 'stock-' . $items['qty'], false);
-                    $this->db->where('id_product', $items['id']);
-                    $this->db->update('product');
+                        'amount' => str_replace('.', '', $uangmuka),
+                        'created_by' => getuser()->id
+                    );  
+                    $this->db->insert('credit_payment', $data);
                 }
-            }
-            $this->cart->destroy();
 
-            if (isset($print)) {
-                $this->printt($invoice);
-                $this->session->set_flashdata('type', 'success_sw');
-                $this->session->set_flashdata('message', 'Transaksi Berhasil Dicetak');
-                redirect(base_url('kasir'));
-            }elseif(isset($save)){
+                foreach ($this->cart->contents() as $items) {
+                    if ($items['type'] == 1) {
+                        $data = array(
+                            'invoice' => $invoice,
+                            'kode_product' => $items['id'],
+                            'name_product' => $items['name'],
+                            'price' => $items['hargapokok'],
+                            'price_sale' => $items['harga_jual'],
+                            'qty' => $items['qty'],
+                            'discount' => $items['disc'],
+                            'sub_total' => $items['subtotal'],
+                        );
+    
+                        $this->db->insert('sale_detail', $data);
+    
+                        $this->db->set('stock', 'stock-' . $items['qty'], false);
+                        $this->db->where('id_product', $items['id']);
+                        $this->db->update('product');
+                    }
+                }
+                $this->cart->destroy();
 
-                $this->session->set_flashdata('type', 'success_sw');
-                $this->session->set_flashdata('message', 'Transaksi Berhasil');
-                redirect(base_url('kasir'));
+                if (isset($print)) {
+                    $this->printt($invoice);
+                    $this->session->set_flashdata('type', 'success_sw');
+                    $this->session->set_flashdata('message', 'Transaksi Berhasil Dicetak');
+                    redirect(base_url('kasir'));
+                }elseif(isset($save)){
+    
+                    $this->session->set_flashdata('type', 'success_sw');
+                    $this->session->set_flashdata('message', 'Transaksi Berhasil');
+                    redirect(base_url('kasir'));
+                }
+
+
+
+            }else{
+                // echo "Lunas";
+                $totalharga = $this->input->post('totalharga');
+                $uangbayar = $this->input->post('uangbayar');
+                $uangkembali = $this->input->post('uangkembali');
+                $invoice = $this->input->post('invoice');
+                $customer = $this->input->post('customer');
+    
+                $data = array(
+                    'invoice' => $invoice,
+                    'total_sales' => str_replace('.', '', $totalharga),
+                    'pay_money' => str_replace('.', '', $uangbayar),
+                    'refund' => str_replace('.', '', $uangkembali),
+                    'total_qty' => '5',
+                    'id_customer' => $customer,
+                    'id_user' => getuser()->id,
+                    'paid' => '1',
+                    'type' => 'cash'
+                );
+                $this->db->insert('sales', $data);
+    
+                foreach ($this->cart->contents() as $items) {
+                    if ($items['type'] == 1) {
+                        $data = array(
+                            'invoice' => $invoice,
+                            'kode_product' => $items['id'],
+                            'name_product' => $items['name'],
+                            'price' => $items['hargapokok'],
+                            'price_sale' => $items['harga_jual'],
+                            'qty' => $items['qty'],
+                            'discount' => $items['disc'],
+                            'sub_total' => $items['subtotal'],
+                        );
+    
+                        $this->db->insert('sale_detail', $data);
+    
+                        $this->db->set('stock', 'stock-' . $items['qty'], false);
+                        $this->db->where('id_product', $items['id']);
+                        $this->db->update('product');
+                    }
+                }
+                $this->cart->destroy();
+    
+                if (isset($print)) {
+                    $this->printt($invoice);
+                    $this->session->set_flashdata('type', 'success_sw');
+                    $this->session->set_flashdata('message', 'Transaksi Berhasil Dicetak');
+                    redirect(base_url('kasir'));
+                }elseif(isset($save)){
+    
+                    $this->session->set_flashdata('type', 'success_sw');
+                    $this->session->set_flashdata('message', 'Transaksi Berhasil');
+                    redirect(base_url('kasir'));
+                }
             }
 
         } else {

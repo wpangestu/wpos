@@ -82,14 +82,37 @@ class Customer extends CI_Controller
         if($cek->num_rows() > 0 ) {
             $this->session->set_flashdata('message', 'Kode Pelanggan sudah digunakan');
             $this->session->set_flashdata('type', 'failed');
-            redirect(site_url('customer'));
         }else{
             $this->Customer_model->insert($data);
             $this->session->set_flashdata('message', 'Data berhasil ditambah');
             $this->session->set_flashdata('type', 'success');
-            redirect(site_url('customer'));
         }
-        
+        redirect(site_url('customer'));        
+    }
+
+    public function quickAddCustomer()
+    {
+
+        $data = array(
+            'id_customer' => $this->input->post('id_customer',TRUE),
+            'name_customer' => $this->input->post('name_customer',TRUE),
+            'gender' => $this->input->post('gender',TRUE),
+            'address' => $this->input->post('address',TRUE),
+            'phone' => $this->input->post('phone',TRUE),
+        );
+
+        $this->db->insert('customer',$data);
+
+        $id = $this->db->insert_id();
+
+        $data = $this->Customer_model->get_by_id($id);
+
+        $result = array(
+            'id' => $data->id_customer,
+            'name' => $data->name_customer
+        );
+
+        echo json_encode($result);
     }
     
     public function update($id) 
@@ -161,6 +184,12 @@ class Customer extends CI_Controller
 	$this->form_validation->set_rules('id', 'id', 'trim');
 	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
+
+    public function get_number_customer()
+    {
+        $id_customer = getAutoNumber('customer','id_customer','P',4);
+        echo $id_customer;
+    }    
 
 }
 

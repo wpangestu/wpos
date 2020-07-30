@@ -47,6 +47,27 @@ class Category extends CI_Controller
         );
         $this->load->view('template', $data);
     }
+
+    public function quickAddCategory()
+    {
+        $data = array(
+            'name' => $this->input->post('name',TRUE),
+            'description' => $this->input->post('deskripsi',TRUE),
+        );
+
+        $this->db->insert('category',$data);
+
+        $id = $this->db->insert_id();
+
+        $data = $this->Category_model->get_by_id($id);
+
+        $result = array(
+            'id' => $data->id,
+            'name' => $data->name
+        );
+
+        echo json_encode($result);
+    }
     
     public function create_action() 
     {

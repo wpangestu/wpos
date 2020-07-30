@@ -151,7 +151,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                                     $('#detail_cart').html(data);
                                     // $('#tbl_cart').DataTable().ajax.reload();
                                     let a = $('#jumlahtotal').val();
-                                    $('#pembayaran_total').val(a);
+                                    $('.pembayaran_total').val(a);
                                     $('#hargatotalbesar').text(a);
                                     $('#formtemp').hide();
                                     $('#pembayaran_uang_bayar').val(0);
@@ -209,7 +209,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                     $('#kodebarang').val('');
                     $('#detail_cart').html(data);
                     let a = $('#jumlahtotal').val();
-                    $('#pembayaran_total').val(a);
+                    $('.pembayaran_total').val(a);
                     $('#hargatotalbesar').text(a);
                     $('#formtemp').hide();
                     $('#pembayaran_uang_bayar').val(0);
@@ -241,7 +241,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                     $('#kodebarang').focus();  
                     $('#detail_cart').html(data);
                     let a = $('#jumlahtotal').val();
-                    $('#pembayaran_total').val(a);
+                    $('.pembayaran_total').val(a);
                     $('#hargatotalbesar').text(a);
                     $('#pembayaran_uang_bayar').val(0);
                     $('#form_kembali').removeClass('has-success');
@@ -303,7 +303,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                 success: function(data) {
                     $('#detail_cart').html(data);
                     let a = $('#jumlahtotal').val();
-                    $('#pembayaran_total').val(a);
+                    $('.pembayaran_total').val(a);
                     $('#hargatotalbesar').text(a);
                     $('#pembayaran_uang_bayar').val(0);
                     $('#form_kembali').removeClass('has-success');
@@ -328,7 +328,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                 success: function(data) {
                     $('#detail_cart').html(data);
                     let a = $('#jumlahtotal').val();
-                    $('#pembayaran_total').val(a);
+                    $('.pembayaran_total').val(a);
                     $('#hargatotalbesar').text(a);
                     $('#pembayaran_uang_bayar').val(0);
                     $('#form_kembali').removeClass('has-success');
@@ -354,7 +354,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                     $('#editproduk').modal('hide');
                     $('#detail_cart').html(data);
                     let a = $('#jumlahtotal').val();
-                    $('#pembayaran_total').val(a);
+                    $('.pembayaran_total').val(a);
                     $('#hargatotalbesar').text(a);
 
                     $('#pembayaran_uang_bayar').val(0);
@@ -396,7 +396,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                         $('#editproduk').modal('hide');
                         $('#detail_cart').html(data);
                         let a = $('#jumlahtotal').val();
-                        $('#pembayaran_total').val(a);
+                        $('.pembayaran_total').val(a);
                         $('#hargatotalbesar').text(a);
 
                         $('#pembayaran_uang_bayar').val(0);
@@ -470,7 +470,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                     $('#editcart').modal('hide');
                     $('#detail_cart').html(data);
                     let a = $('#jumlahtotal').val();
-                    $('#pembayaran_total').val(a);
+                    $('.pembayaran_total').val(a);
                     $('#hargatotalbesar').text(a);
 
                     $('#pembayaran_uang_bayar').val(0);
@@ -499,7 +499,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                     $('#editproduk').modal('hide');
                     $('#detail_cart').html(data);
                     let a = $('#jumlahtotal').val();
-                    $('#pembayaran_total').val(a);
+                    $('.pembayaran_total').val(a);
                     $('#hargatotalbesar').text(a);
 
                     $('#pembayaran_uang_bayar').val(0);
@@ -604,7 +604,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
 
 
         $('#pembayaran_uang_bayar').on('keyup focus', function(){
-            var b = $('#pembayaran_total').val();
+            var b = $('.pembayaran_total').val();
             var a = $(this).val();
             const bayar = a.replace(/\./g,'');
             const total = b.replace(/\./g,'');
@@ -632,6 +632,37 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                     thousandsSeparator: '.'
                 });
             }
+        });
+
+        $('#pembayaran_uang_muka').on('keyup focus', function(){
+            // alert('okok');
+            var b = $('.pembayaran_total').val();
+            var a = $(this).val();
+            const bayar = a.replace(/\./g,'');
+            const total = b.replace(/\./g,'');
+            const uang_muka = parseInt(bayar);
+            const total_harga = parseInt(total);
+            if(uang_muka<=total_harga){
+                const sisa_tagihan = total_harga-uang_muka;
+                $('#pembayaran_sisa_tagihan').val(sisa_tagihan);
+                $('.btn_print_save_hutang').removeAttr('disabled');
+                $('.btn_only_save_hutang').removeAttr('disabled');
+                $('#pembayaran_sisa_tagihan').priceFormat({
+                    prefix: '',
+                    centsLimit: 0,
+                    thousandsSeparator: '.'
+                });
+            }else{
+                $('#pembayaran_sisa_tagihan').val(total_harga);
+                $('.btn_print_save_hutang').attr('disabled',true);
+                $('.btn_only_save_hutang').attr('disabled',true);
+                $('#pembayaran_sisa_tagihan').priceFormat({
+                    prefix: '',
+                    centsLimit: 0,
+                    thousandsSeparator: '.'
+                });
+            }
+
         });
 
         $('#hargatotalbesar').priceFormat({
@@ -669,10 +700,39 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
 
         })
 
-        $('.select2').select2();
-        if($('#selectcustomer').hasClass('select2-hidden-accessible')){
+        // $('.select2').select2({
+            
+        // });
         
-        }
+        $('.select_customer_modal').select2({
+            "dropdownParent" : $('#prosesmodal'),
+            "language" : {
+                "noResults": function(){
+                    let text = event.target.value;
+                    return `<a id="modal_add_customer" data-text="${text}">+ ${text} (Tambah)</a>`
+                }
+            },
+            "escapeMarkup":function(markup){
+                return markup;
+            }            
+        });
+
+        $(document).on("click","#modal_add_customer",function(){
+
+            $.ajax({
+                url: "<?php echo base_url() ?>customer/get_number_customer",
+                method: "get",
+                success: function(response) {
+                    $('#modal_add_customer_2 #id_customer').val(response);
+                }
+            });
+
+            $('#credit_customer').select2('close');
+            const text = $(this).data('text');
+            $('#modal_add_customer_2 #name_customer').val(text);
+            $('#modal_add_customer_2').modal('show');
+
+        })
 
         $('#btn-print-save').on('click',function(){
             $(this).html('<i class="fa fa-spinner fa-spin fa-lg"></i> Simpan & Cetak');
@@ -697,7 +757,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
             $('#kodebarang').focus();
             // $('#kodebarang').trigger('focus');
         })
-        $('#btn_close_modal_proses_bayar').click(function(){
+        $('.btn_close_modal_proses_bayar').click(function(){
             $('#prosesmodal').modal('hide');
             $('#kodebarang').focus();
         })
@@ -705,6 +765,22 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
 
         $( "#kodebarang" ).autocomplete({
                 source: "<?php echo site_url('kasir/get_autocomplete');?>",
+                // response : function(event,ui){
+                //     if(!ui.content.length){
+                //         let t = $('#kodebarang').val()
+                //         var noresult = { value:"",label:"+ Tambahkan "+t,name:t};
+                //         ui.content.push(noresult)
+                //     }
+                // },
+                // "escapeMarkup":function(markup){
+                //     return markup;
+                // },
+                // messages:{
+                //     noResults : function(){
+                //         let text = event.target.value;
+                //         alert(text)
+                //     }               
+                // },
                 select: function (event, ui) {
                     var produk_id = ui.item.value;
                     var produk_nama = ui.item.name;
@@ -732,7 +808,7 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                             $('#detail_cart').html(data);
                             // $('#tbl_cart').DataTable().ajax.reload();
                             let a = $('#jumlahtotal').val();
-                            $('#pembayaran_total').val(a);
+                            $('.pembayaran_total').val(a);
                             $('#hargatotalbesar').text(a);
                             $('#formtemp').hide();
                             $('#pembayaran_uang_bayar').val(0);
@@ -826,6 +902,194 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
                 }
             });
         })
+
+        $('.select_category').select2({
+            "selectOnClose": true,
+            "dropdownParent" : $('#addproduk'),
+            "language" : {
+                "noResults": function(){
+                let text = event.target.value;
+                return `<a id="md_category" data-text="${text}"> +Tambahkan ${text}</a>`
+                }
+            },
+            "escapeMarkup":function(markup){
+                return markup;
+            }
+        });
+
+        $(document).on('click','#md_category',function(){
+            $('.select_category').select2('close');
+            const text = $(this).data('text');
+            $('#md_add_category #name').val(text);
+            $('#md_add_category').modal('show');
+            $('#md_add_category input#name').focus();
+            // $('.select_category').prop('disabled',false);
+        })
+
+        $('form#quick_add_category').submit(function(e){
+            e.preventDefault();
+            
+            $.ajax({
+                url: "<?php echo base_url() ?>category/quickAddCategory",
+                method: "POST",
+                dataType: "json",
+                data: $(this).serialize(),
+                success: function(response) {
+                    const data = {
+                        id: response.id,
+                        text: response.name
+                    }
+                    const newOption = new Option(data.text,data.id,true,true);
+                    $('.select_category').append(newOption).trigger('change');
+                    $('#md_add_category').modal('hide');
+                }
+            });
+        });
+
+        $('#tab_hutang').click(function(){
+            // $('.form_pelanggan').removeAttr('hidden');
+            // $('.form_pelanggan select').attr('required',true);
+            // $('#prosesmodal #tab_2 #pembayaran_uang_muka').focus();
+        })
+        $('#tab_lunas').click(function(){
+            // $('.form_pelanggan').attr('hidden',true);
+            // $('.form_pelanggan select').removeAttr('required');
+            // $('#prosesmodal #tab_2 #pembayaran_uang_bayar').val(0);
+        })
+
+        function html_cash()
+        {
+            return `
+            <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Uang Bayar</label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" name="uangbayar" onclick="this.select()" autocomplete="off" class="form-control" id="pembayaran_uang_bayar" placeholder="0">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="form_kembali">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Uang Kembali </label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" readonly class="form-control" id="pembayaran_uang_kembali" name="uangkembali">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8">
+                      <button disabled type=submit name="print_save" class="btn btn-success" id="btn-print-save"><i class="fa fa-print"></i> Simpan & Cetak</button>
+                      <button disabled type="submit" name="just_save" class="btn btn-info" id="btn-just-save"><i class="fa fa-save"></i> Simpan saja</button>
+                      <button class="btn btn_close_modal_proses_bayar" type="button">Tutup</button>
+                    </div>
+                  </div>
+            `
+        }
+
+        function html_hutang()
+        {
+            return `
+                <div class="form-group form_pelanggan">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Pelanggan</label>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-user-circle"></i></div>
+                        <select name="customer" style="width:100%" class="form-control select_customer_modal">
+                          <option value="">Pilih</option>
+                          <?php foreach ($customers as $c) : ?>
+                            <option value="<?= $c->id_customer ?>"><?= $c->name_customer ?></option>
+                          <?php endforeach ?>
+                        </select>
+                        <input type="hidden" name="credit" value="true">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Uang Muka</label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" name="uangmuka" value="0" onclick="this.select()" autocomplete="off" class="form-control rupiah" id="pembayaran_uang_muka" placeholder="0">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="form_kembali">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Sisa Tagihan </label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" readonly class="form-control" id="pembayaran_sisa_tagihan" name="sisa_tagihan">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8">
+                      <button type=submit name="print_save" class="btn btn-success btn_print_save_hutang"><i class="fa fa-print"></i> Simpan & Cetak</button>
+                      <button type="submit" name="just_save" class="btn btn-info btn_only_save_hutang"><i class="fa fa-save"></i> Simpan saja</button>
+                      <button class="btn btn_close_modal_proses_bayar" type="button">Tutup</button>
+                    </div>
+                  </div>
+            `
+        }
+
+        $('#tab_lunas').on('shown.bs.tab',function(){
+            const view_cash = html_cash();
+            $('#pembayaran_uang_bayar').focus();
+            $('#form_credit').val("");
+            // console.log(view_cash);
+            // $('#prosesmodal #tab_1').html(``);
+        })
+        $('#tab_hutang').on('shown.bs.tab',function(){
+            const view = html_hutang();
+            $('#form_credit').val("true");
+            $('#credit_customer').select2('open');
+            // console.log(view);
+            // $('#prosesmodal #tab_1').html(``);
+        })                
+
+        $('#credit_customer').on('select2:select', function(e) {
+            var data = e.params.data;
+            $('#pembayaran_uang_muka').focus();
+        })
+
+        $('#form_customer').submit(function(e){
+            e.preventDefault();
+            const data = $(this).serialize();
+
+            $.ajax({
+                url: "<?php echo base_url() ?>customer/quickAddCustomer",
+                method: "POST",
+                dataType: "json",
+                data: $(this).serialize(),
+                success: function(response) {
+                    const data = {
+                        id: response.id,
+                        text: response.name
+                    }
+                    const newOption = new Option(data.text,data.id,true,true);
+                    $('.select_customer_modal').append(newOption).trigger('change');
+                    $('#modal_add_customer_2').modal('hide');
+                    // $('#md_add_category').modal('hide');
+                }
+            });
+        });
+
+        $('#btn_add_customer').click(function(){
+            $.ajax({
+                url: "<?php echo base_url() ?>customer/get_number_customer",
+                method: "get",
+                success: function(response) {
+                    $('#modal_add_customer_2 #id_customer').val(response);
+                }
+            });
+
+            $('#credit_customer').select2('close');
+            $('#modal_add_customer_2').modal('show');
+        });
 
     });
 

@@ -19,7 +19,7 @@
                   <div class="input-group-addon">
                     <i class="glyphicon glyphicon-qrcode"></i>
                   </div>
-                  <input type="text" autofocus autocomplete="off" placeholder="Scan Kode Barang / Pilih barang dengan klik icon cari" class="form-control pull-right" id="kodebarang">
+                  <input type="text" autofocus autocomplete="off" placeholder="Ketik Nama Barnang / Scan Kode Barang..." class="form-control pull-right" id="kodebarang">
                   <span class="input-group-btn">
                     <button id="btn_show_modal_add_produk" type="button" title="Tambah barang" class="btn <?= btncolor(getsetting()->theme) ?>"><i class="fa fa-plus"></i></button>
                   </span>
@@ -107,17 +107,6 @@
             <!-- /.box-header -->
             <div class="box-body">
               <div class="form-group">
-                <label for="customer" class="col-sm-4 control-label">Pelenggan</label>
-                <div class="col-sm-8">
-                  <select name="customer" id="selectcustomer" class="form-control select2">
-                    <option value="1">Umum</option>
-                    <?php foreach ($customers as $c) : ?>
-                      <option value="<?= $c->id_customer ?>"><?= $c->name_customer ?></option>
-                    <?php endforeach ?>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
                 <label for="tanggal" class="col-sm-4 control-label">Tanggal</label>
                 <div class="col-sm-8">
                   <input type="text" readonly class="form-control" name="tanggal" value="<?= date('d/m/Y') ?>" placeholder="Email">
@@ -173,64 +162,127 @@
               <h3 class="modal-title" id="myModalLabel">Proses Pembayaran</h3>
             </div>
             <div class="modal-body">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="box box-solid" style="margin-top:-5px">
-                    <div class="box-body">
-                      <!-- <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-4 control-label">Pelanggan</label>
-                        <div class="col-sm-8">
-                          <div class="input-group input-group-lg">
-                            <div class="input-group-addon">Rp</div>
-                            <select class="form-control select2">
-                              <option value="">aaa</option>
-                              <option value="">bbb</option>
-                              <option value="">ccc</option>
-                              <option value="">ddd</option>
-                              <option value="">fff</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div> -->
-                      <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-4 control-label">Total Harga</label>
-                        <div class="col-sm-8">
-                          <div class="input-group input-group-lg">
-                            <div class="input-group-addon">Rp</div>
-                            <input type="text" name="totalharga" readonly value="<?= rupiah($total) ?>" class="form-control" id="pembayaran_total">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-4 control-label">Uang Bayar</label>
-                        <div class="col-sm-8">
-                          <div class="input-group input-group-lg">
-                            <div class="input-group-addon">Rp</div>
-                            <input type="text" name="uangbayar" onclick="this.select()" autocomplete="off" class="form-control" id="pembayaran_uang_bayar" placeholder="0">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group" id="form_kembali">
-                        <label for="inputEmail3" class="col-sm-4 control-label">Uang Kembali </label>
-                        <div class="col-sm-8">
-                          <div class="input-group input-group-lg">
-                            <div class="input-group-addon">Rp</div>
-                            <input type="text" readonly class="form-control" id="pembayaran_uang_kembali" name="uangkembali">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-8">
-                          <button disabled type=submit name="print_save" class="btn btn-success" id="btn-print-save"><i class="fa fa-print"></i> Simpan & Cetak</button>
-                          <button disabled type="submit" name="just_save" class="btn btn-info" id="btn-just-save"><i class="fa fa-save"></i> Simpan saja</button>
-                          <button class="btn" type="button" id="btn_close_modal_proses_bayar">Tutup</button>
-                        </div>
+
+            <div class="nav-tabs-custom">
+              <ul class="nav nav-tabs">
+                <li class="active" id="tab_lunas"><a href="#tab_1" data-toggle="tab">Lunas</a></li>
+                <li id="tab_hutang"><a href="#tab_2" data-toggle="tab">Hutang</a></li>
+              </ul>
+              <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+
+                  <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Pelanggan</label>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-user-circle"></i></div>
+                        <select name="customer" style="width:100%" class="form-control select_customer_modal">
+                          <option value="1">Umum</option>
+                          <?php foreach ($customers as $c) : ?>
+                            <option value="<?= $c->id_customer ?>"><?= $c->name_customer ?></option>
+                          <?php endforeach ?>
+                        </select>
                       </div>
                     </div>
                   </div>
+
+                  <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Total Harga</label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" name="totalharga" readonly value="<?= rupiah($total) ?>" class="form-control pembayaran_total">
+                      </div>
+                    </div>
+                  </div>
+                  <input type="hidden" name="credit" id="form_credit" value="">
+                  <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Uang Bayar</label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" name="uangbayar" onclick="this.select()" autocomplete="off" class="form-control" id="pembayaran_uang_bayar" placeholder="0">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="form_kembali">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Uang Kembali </label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" readonly class="form-control" id="pembayaran_uang_kembali" name="uangkembali">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8">
+                      <button disabled type=submit name="print_save" class="btn btn-success" id="btn-print-save"><i class="fa fa-print"></i> Simpan & Cetak</button>
+                      <button disabled type="submit" name="just_save" class="btn btn-info" id="btn-just-save"><i class="fa fa-save"></i> Simpan saja</button>
+                      <button class="btn btn_close_modal_proses_bayar" type="button">Tutup</button>
+                    </div>
+                  </div>
+
                 </div>
-              </div>
+                <!-- /.tab-pane -->
+                <div class="tab-pane" id="tab_2">                  
+                  <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Pelanggan</label>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-user-circle"></i></div>
+                        <select name="customer_credit" style="width:100%" id="credit_customer" class="form-control select_customer_modal">
+                          <option value="1">Umum</option>
+                          <?php foreach ($customers as $c) : ?>
+                            <option value="<?= $c->id_customer ?>"><?= $c->name_customer ?></option>
+                          <?php endforeach ?>
+                        </select>
+                        <span class="input-group-btn">
+                          <button type="button" id="btn_add_customer" class="btn btn-default btn-flat"><i class="text-primary fa fa-plus-circle"></i></button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-4 control-label">Total Harga</label>
+                    <div class="col-sm-8">
+                      <div class="input-group input-group-lg">
+                        <div class="input-group-addon">Rp</div>
+                        <input type="text" name="totalharga" readonly value="<?= rupiah($total) ?>" class="form-control pembayaran_total">
+                      </div>
+                    </div>
+                  </div>
+                  <div id="credit_content"></div>
+                    <div class="form-group">
+                      <label for="inputEmail3" class="col-sm-4 control-label">Uang Muka</label>
+                      <div class="col-sm-8">
+                        <div class="input-group input-group-lg">
+                          <div class="input-group-addon">Rp</div>
+                          <input type="text" name="uangmuka" value="0" onclick="this.select()" autocomplete="off" class="form-control rupiah" id="pembayaran_uang_muka" placeholder="0">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" id="form_kembali">
+                      <label for="inputEmail3" class="col-sm-4 control-label">Sisa Tagihan </label>
+                      <div class="col-sm-8">
+                        <div class="input-group input-group-lg">
+                          <div class="input-group-addon">Rp</div>
+                          <input type="text" readonly class="form-control" id="pembayaran_sisa_tagihan" name="sisa_tagihan">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-md-4"></div>
+                      <div class="col-md-8">
+                        <button type=submit name="print_save" class="btn btn-success btn_print_save_hutang"><i class="fa fa-print"></i> Simpan & Cetak</button>
+                        <button type="submit" name="just_save" class="btn btn-info btn_only_save_hutang"><i class="fa fa-save"></i> Simpan saja</button>
+                        <button class="btn btn_close_modal_proses_bayar" type="button">Tutup</button>
+                      </div>
+                    </div>                  
+                </div>
+              <!-- /.tab-content -->
+            </div>
             </div>
           </div>
         </div>
@@ -462,7 +514,7 @@
           <div class="form-group">
             <label class="col-sm-3 text-right" for="nmbarang">Kategori</label>
             <div class="col-md-9">
-              <select name="category_id" required class="form-control">
+              <select name="category_id" required style="width:100%" class="form-control select_category">
                   <option value="">pilih</option>
                   <?php foreach ($kategori->result() as $key => $value) : ?>
                     <option value="<?= $value->id ?>"><?= $value->name ?></option>
@@ -525,3 +577,120 @@
   </div>
 </div>
 <!-- End Modal -->
+
+<!-- <div class="modal fade" id="modal_add_customer">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Tambah Pelanggan</h4>
+        </div>
+        <div class="modal-body">
+            <form action="<?= base_url('customer/create_action') ?>" method="post">
+                <div class="form-group">
+                    <label for="varchar">Kode Pelanggan <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" value="<?= $newid_cust ?>" name="id_customer" id="id_customer" required placeholder="Id Customer" />
+                </div>
+                <div class="form-group">
+                    <label for="varchar">Nama Pelanggan <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="name_customer" id="name_customer" required placeholder="Name Customer" />
+                </div>
+                <div class="form-group">
+                    <label for="enum">Jenis Kelamin <span class="text-danger">*</span></label>
+                    <select name="gender" class="form-control" id="gender" required>
+                        <option value="">Pilih</option>
+                        <option value="l">Laki-laki</option>
+                        <option value="p">Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">Alamat</label>
+                    <textarea class="form-control" rows="3" name="address" id="address" placeholder="Address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="varchar">Telephone</label>
+                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn <?= btncolor(getsetting()->theme) ?>"><i class="fa fa-send-o"></i> Simpan</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>  -->
+
+<div class="modal fade" id="md_add_category">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Tambah Data Kategori</h4>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url('category/create_action') ?>" id="quick_add_category" method="post">
+                    <div class="form-group">
+                        <label for="varchar">Kategori Produk <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="kategori" required value="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="varchar">Deskripsi</label>
+                        <input type="text" class="form-control" name="deskripsi" id="deskripsi" placeholder="Deskripsi" value="" />
+                    </div>
+                    <button type="submit" class="btn <?= btncolor(getsetting()->theme) ?>"><i class="fa fa-send-o"></i> Simpan</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal_add_customer_2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Tambah Data Kategori</h4>
+            </div>
+            <div class="modal-body">
+            <form id="form_customer" action="#" method="post">
+                <div class="form-group">
+                    <label for="varchar">Kode Pelanggan <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" value="<?= $newid_cust ?>" name="id_customer" id="id_customer" required placeholder="Id Customer" />
+                </div>
+                <div class="form-group">
+                    <label for="varchar">Nama Pelanggan <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="name_customer" id="name_customer" required placeholder="Name Customer" />
+                </div>
+                <div class="form-group">
+                    <label for="enum">Jenis Kelamin <span class="text-danger">*</span></label>
+                    <select name="gender" class="form-control" id="gender" required>
+                        <option value="">Pilih</option>
+                        <option value="l">Laki-laki</option>
+                        <option value="p">Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">Alamat</label>
+                    <textarea class="form-control" rows="3" name="address" id="address" placeholder="Address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="varchar">Telephone</label>
+                    <input type="phone" class="form-control" name="phone" id="phone" placeholder="Phone" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn <?= btncolor(getsetting()->theme) ?>"><i class="fa fa-send-o"></i> Simpan</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                </div>
+            </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

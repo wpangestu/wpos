@@ -1,17 +1,26 @@
 <?php
 class Report_model extends CI_Model {
 
-    public function getsalesbetween($start,$end,$id_customer=null)
+    public function getsalesbetween($start,$end,$id_customer=null,$type=null,$o_asc_desc=null)
     {
       $this->db->select('sales.*, users.username, customer.name_customer');
       $this->db->where('DATE(datetime_sales) >=', datemysql($start));
       $this->db->where('DATE(datetime_sales) <=', datemysql($end));
+      if($type!=null){
+        $this->db->where('type', $type);
+      }else{
+        $this->db->where('type', 'cash');
+      }
       if($id_customer!=null){
         $this->db->where('sales.id_customer', $id_customer);
       }
       $this->db->join('users', 'users.id = sales.id_user');
       $this->db->join('customer', 'customer.id_customer = sales.id_customer');
-      $this->db->order_by('datetime_sales', 'ASC');
+      if($o_asc_desc==null){
+        $this->db->order_by('datetime_sales', 'ASC');
+      }else{
+        $this->db->order_by('datetime_sales', $o_asc_desc);
+      }
       return $this->db->get('sales');
     }
 

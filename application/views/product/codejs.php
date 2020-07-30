@@ -1,10 +1,49 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('.select2').select2();
+        $('.select2category').select2({
+            "language" : {
+                "noResults": function(){
+                let text = event.target.value;
+                return `<a id="md_category" data-text="${text}"> +Tambahkan ${text}</a>`
+                }
+            },
+            "escapeMarkup":function(markup){
+                return markup;
+            }
+        });
+
+        $(document).on('click','#md_category',function(){
+            const text = $(this).data('text');
+            $('#md-add-category #name').val(text);
+            $('#md-add-category').modal('show');
+            $('#md-add-category input#name').focus();
+        })
+
+        $('form#quick_add_category').submit(function(e){
+            e.preventDefault();
+            
+            $.ajax({
+                url: "<?php echo base_url() ?>category/quickAddCategory",
+                method: "POST",
+                dataType: "json",
+                data: $(this).serialize(),
+                success: function(response) {
+                    const data = {
+                        id: response.id,
+                        text: response.name
+                    }
+                    const newOption = new Option(data.text,data.id,true,true);
+                    $('#form_add_product .select2category').append(newOption).trigger('change');
+                    $('#md-add-category').modal('hide');
+                }
+            });
+        });
+
         $('body').tooltip({selector: '[data-toggle="tooltip"]'});
 
         $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+            console.log(oSettings)
             return {
                 "iStart": oSettings._iDisplayStart,
                 "iEnd": oSettings.fnDisplayEnd(),
@@ -21,8 +60,10 @@
                 var api = this.api();
                 $('#mytable_filter input')
                     .off('.DT')
-                    .on('keyup.DT', function() {
-                        api.search(this.value).draw();
+                    .on('keyup.DT', function(e) {
+                        if (e.keyCode == 13) {
+                            api.search(this.value).draw();
+                        }
                     });
             },
             responsive: true,
@@ -89,6 +130,7 @@
                 [10, 'desc']
             ],
             rowCallback: function(row, data, iDisplayIndex) {
+                // console.log(data);
                 var info = this.fnPagingInfo();
                 var page = info.iPage;
                 var length = info.iLength;
