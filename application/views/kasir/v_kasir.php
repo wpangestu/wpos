@@ -255,7 +255,7 @@
                   </div>
                   <div id="credit_content"></div>
                     <div class="form-group">
-                      <label for="inputEmail3" class="col-sm-4 control-label">Uang Muka</label>
+                      <label for="inputEmail3" class="col-sm-4 control-label">Pembayaran Awal</label>
                       <div class="col-sm-8">
                         <div class="input-group input-group-lg">
                           <div class="input-group-addon">Rp</div>

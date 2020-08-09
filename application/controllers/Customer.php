@@ -95,7 +95,7 @@ class Customer extends CI_Controller
 
         $data = array(
             'id_customer' => $this->input->post('id_customer',TRUE),
-            'name_customer' => $this->input->post('name_customer',TRUE),
+            'name_customer' => ucfirst($this->input->post('name_customer',TRUE)),
             'gender' => $this->input->post('gender',TRUE),
             'address' => $this->input->post('address',TRUE),
             'phone' => $this->input->post('phone',TRUE),

@@ -738,6 +738,10 @@ $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
             $(this).html('<i class="fa fa-spinner fa-spin fa-lg"></i> Simpan & Cetak');
         })
 
+        $('.btn_print_save_hutang').on('click',function(){
+            $(this).html('<i class="fa fa-spinner fa-spin fa-lg"></i> Simpan & Cetak');
+        })
+
         $('#btn-just-save').on('click',function(){
             $(this).html('<i class="fa fa-spinner fa-spin fa-lg"></i> Simpan saja');
         })
